@@ -1,6 +1,7 @@
 ﻿using E_Commerce_MVC.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,23 +33,48 @@ namespace E_Commerce_MVC.Controllers
         }
 
         // GET: ProductsController/Create
-        public ActionResult Create()
+        public async Task <ActionResult> Create()
         {
+            List<SelectListItem> list = new List<SelectListItem>();
+            var http = new HttpClient();
+
+            var subCategories = await http.GetFromJsonAsync<List<SubCategory>>("https://localhost:44356/api/SubCategory");
+            
+           foreach(var cat in subCategories)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = cat.Name,
+                    Value = cat.Id.ToString(),
+                });
+
+            }
+           
+               
+
+                    ViewData["SubCategory"] =list;
+
             return View();
+          
         }
 
         // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(Product product)
+
         {
+
             try
             {
+                var client = new HttpClient();
+                await client.PostAsJsonAsync("https://localhost:44356/api/Product", product);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(product);
             }
         }
 

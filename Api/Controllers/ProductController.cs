@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Api.Data;
 using E_Commerce_Api.Data.Entities;
 using E_Commerce_Api.Models.ProductModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Api.Controllers
 {
@@ -16,6 +17,8 @@ namespace Api.Controllers
     public class ProductController : ControllerBase
     {
         private readonly SqlContext _context;
+
+        public object ViewData { get; private set; }
 
         public ProductController(SqlContext context)
         {
@@ -121,6 +124,8 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductEntity>> PostProductEntity(CreateProductModel model)
         {
+
+
             var subcategory = await _context.SubCategories.Where(x => x.Id == model.SubCategoryId).FirstOrDefaultAsync();
 
             if (subcategory != null)
