@@ -28,15 +28,25 @@ namespace Api.Controllers
         {
             var products = new List<GetProductsModel>();
 
-            foreach (var product in await _context.Products.Include(x => x.SubCategory).ToListAsync())
+            foreach (var product in await _context.Products.Include(x => x.SubCategory).ThenInclude(x=>x.Category).ToListAsync())
                 products.Add(new GetProductsModel
-                {
+                { 
+                    Id = product.Id,
                     Name = product.Name,
                     Description = product.Description,
                     Price = product.Price,
                     ImageURL = product.ImageURL,
                     InStock = product.InStock,
-                    SubCategoryName = product.SubCategory.Name
+                    SubCategory = new SubCategoryEntity
+                    {
+                        Id = product.SubCategory.Id,
+                        Name = product.SubCategory.Name,
+                        Category = new CategoryEntity
+                        {
+                            Id = product.SubCategory.Category.Id,
+                            Name = product.SubCategory.Category.Name
+                        }
+                    }
                 });
 
             return products;
@@ -46,7 +56,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GetProductsModel>> GetProductEntity(int id)
         {
-            var product = await _context.Products.Include(x => x.SubCategory).Where(x => x.Id == id).FirstOrDefaultAsync();
+            var product = await _context.Products.Include(x => x.SubCategory).ThenInclude(x=>x.Category).Where(x => x.Id == id).FirstOrDefaultAsync();
 
 
             if (product == null)
@@ -56,12 +66,22 @@ namespace Api.Controllers
 
             return new GetProductsModel
             {
+                Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
                 Price = product.Price,
                 ImageURL = product.ImageURL,
                 InStock = product.InStock,
-                SubCategoryName = product.SubCategory.Name
+                SubCategory = new SubCategoryEntity
+                {
+                    Id = product.SubCategory.Id,
+                    Name = product.SubCategory.Name,
+                    Category = new CategoryEntity
+                    {
+                        Id = product.SubCategory.Category.Id,
+                        Name = product.SubCategory.Category.Name
+                    }
+                }
             };
         }
 

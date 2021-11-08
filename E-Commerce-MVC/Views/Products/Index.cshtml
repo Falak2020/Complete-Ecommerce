@@ -1,0 +1,48 @@
+﻿@model IEnumerable<E_Commerce_MVC.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+   <a asp-action="Create">Create New</a>
+</p>
+<div class="row row-cols-1 row-cols-md-4 g-4">
+
+    @foreach (var item in Model)
+    {
+   
+    <div class="col ">
+        <a class="text-decoration-none " asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
+            <div class="card-list  h-100">
+                <div class="card-body text-dark">
+                    <p class="mb-1"><h5>@Html.DisplayFor(modelItem => item.SubCategory.Category.Name)</h5> &nbsp;<small> @Html.DisplayFor(modelItem => item.SubCategory.Name)</small></p>
+                    <div class="d-flex  align-items-center">
+                        <img src="@Html.DisplayFor(modelItem => item.ImageURL)" class="card-img-top image-height" alt="">
+                    </div>
+                    <h5 class="card-title space">@Html.DisplayFor(modelItem => item.Name) </h5>
+                    <p class="text-danger  ">
+                       Price :  @Html.DisplayFor(modelItem => item.Price):-
+                    </p>
+                </div>
+                <div class="card-footer">
+                   
+                    <div>
+                        @if (item.InStock)
+                        {
+                            <small class="text-muted"><i class="fas fa-box text-success me-2"></i> lagerstatus</small>
+                        }
+                        else
+                        {
+                            <small class="text-muted"><i class="fas fa-box text-muted me-2"></i> lagerstatus</small>
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        </a>
+        </div>
+   
+            }
+    </div>

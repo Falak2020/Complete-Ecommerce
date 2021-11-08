@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,7 +13,13 @@ namespace E_Commerce_Api.Data.Entities
         public int AddressId { get; set; }
         public virtual UserEntity  User { get; set; }
         public virtual AddressEntity Address { get; set; }
-      //  public virtual ICollection<OrderEntity> Orders { get; set; }
+
+        [InverseProperty(nameof(OrderEntity.DeliveryAddress))]
+        public virtual ICollection<OrderEntity>DeliveryOrders { get; set; }
+
+        [InverseProperty(nameof(OrderEntity.InvoiceAddress))]
+        public virtual ICollection<OrderEntity> InvoiceOrders { get; set; }
+
 
 
     }

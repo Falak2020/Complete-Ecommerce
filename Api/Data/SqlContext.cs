@@ -25,8 +25,5 @@ namespace Api.Data
         public DbSet<OrderItemEntity> OrderItems { get; set; }
         public DbSet<UserAddressEntity>UserAddresses { get; set; }
 
-
-
-
     }
 }

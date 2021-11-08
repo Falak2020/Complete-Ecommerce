@@ -37,24 +37,24 @@ namespace Api.Controllers
             {
                 var OrderItemsCollection = new List<GetOrderItemModel>();
                 foreach (var item in await _context.OrderItems.Where(item => item.OrderId == order.Id).ToListAsync())
-                { 
-                    if (item != null) {
-                     OrderItemsCollection.Add(new GetOrderItemModel
+                {
+                    if (item != null)
                     {
-                        Id = item.Id,
-                        OrderId = order.Id,
-                        ProductId = item.ProductId,
-                        UnitPrice = item.UnitPrice,
-                        Quantity = item.Quantity
+                        OrderItemsCollection.Add(new GetOrderItemModel
+                        {
+                            Id = item.Id,
+                            OrderId = order.Id,
+                            ProductId = item.ProductId,
+                            UnitPrice = item.UnitPrice,
+                            Quantity = item.Quantity
 
-                    });
+                        });
                     }
-                  
+
                 }
 
-                var _deliveryAddress = await _context.UserAddresses.Include(x => x.Address).Where(x => x.Id == order.DeliveryAddressId).FirstOrDefaultAsync();
-                var _invoiceAddress = await _context.UserAddresses.Include(x => x.Address).Where(x => x.Id == order.InvoiceAddressId).FirstOrDefaultAsync();
-
+                var _deliveryAddress = await _context.UserAddresses.Include(x => x.Address).Include(x => x.User).Where(x => x.Id == order.DeliveryAddressId).FirstOrDefaultAsync();
+                var _invoiceAddress = await _context.UserAddresses.Include(x => x.Address).Include(x => x.User).Where(x => x.Id == order.InvoiceAddressId).FirstOrDefaultAsync();
 
                 orders.Add(new GetOrderModel
                 {
@@ -85,7 +85,7 @@ namespace Api.Controllers
                         FirstName = order.User.FirstName,
                         LastName = order.User.LastName,
                         Email = order.User.Email,
-                       
+
 
                     },
 
@@ -93,11 +93,9 @@ namespace Api.Controllers
 
                 });
             }
-
-
-            return orders;
-
-        }
+                    return orders;
+        
+         }
 
         // GET: api/Order/5
         [HttpGet("{id}")]
@@ -153,29 +151,34 @@ namespace Api.Controllers
             var User = await _context.Users.Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
             var _userAddresses = new List<GetUserAddressModel>();
 
-            var _deliveryAddress = await _context.UserAddresses.Include(x => x.Address).Where(x => x.Id == model.DeliveryAddressId).FirstOrDefaultAsync();
-            var _invoiceAddress = await _context.UserAddresses.Include(x => x.Address).Where(x => x.Id == model.InvoiceAddressId).FirstOrDefaultAsync();
+            var _deliveryAddress = await _context.UserAddresses.Include(x => x.Address).Include(x=>x.User).Where(x => x.Id == model.DeliveryAddressId).FirstOrDefaultAsync();
+            var _invoiceAddress = await _context.UserAddresses.Include(x => x.Address).Include(x => x.User).Where(x => x.Id == model.InvoiceAddressId).FirstOrDefaultAsync();
 
 
             //_userAddresses = await Task.Run(() => GetUsersAddresses(User.Id));
           
             if (_deliveryAddress != null && _invoiceAddress != null && User != null)
             {
-                var order = new OrderEntity
+                if(_deliveryAddress.UserId == model.UserId && _invoiceAddress.UserId == model.UserId)
                 {
-                    OrderDate = model.OrderDate,
-                    Status = model.Status,
-                    OurReference = model.OurReference,
-                    UserId = model.UserId,
-                    DeliveryTypeId = model.DeliveryTypeId,
-                    DeliveryAddressId = model.DeliveryAddressId,
-                    InvoiceAddressId = model.InvoiceAddressId,
-                };
+                    var order = new OrderEntity
+                        {
+                            OrderDate = model.OrderDate,
+                            Status = model.Status,
+                            OurReference = model.OurReference,
+                            UserId = model.UserId,
+                            DeliveryTypeId = model.DeliveryTypeId,
+                            DeliveryAddressId = model.DeliveryAddressId,
+                            InvoiceAddressId = model.InvoiceAddressId,
+                        };
 
-                _context.Orders.Add(order);
-                await _context.SaveChangesAsync();
+                        _context.Orders.Add(order);
+                        await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetOrderEntity", new { id = order.Id }, order);
+                        return CreatedAtAction("GetOrderEntity", new { id = order.Id }, order);
+                }
+                else return new BadRequestObjectResult(JsonConvert.SerializeObject(new { message = "The delivery address or the invoice address doesnot belong to the current user" }));
+
             }
             else
                 return new BadRequestObjectResult(JsonConvert.SerializeObject(new { message = "The delivery address or the invoice address or the User doesnot existed" }));
