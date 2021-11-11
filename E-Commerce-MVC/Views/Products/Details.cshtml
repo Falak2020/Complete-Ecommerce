@@ -22,11 +22,16 @@
                             <div class="text-end">
                                 @if (Model.InStock)
                                 {
-                                    <button class=" btn cart-btn btn-outline-success"><i class="fas fa-shopping-cart me-1"></i>Köp</button>
+
+                                    using (Html.BeginForm("AddToCart", "Products", new {@id = Model.Id}, FormMethod.Get))
+                                    {
+                                        <button class=" btn cart-btn btn-outline-success" type="submit"><i class="fas fa-shopping-cart me-1"></i>Köp</button>
+                                    }
+
                                 }
                                 else
                                 {
-                                    <button class=" btn cart-btn btn-outline-success disabled"><i class="fas fa-shopping-cart me-1"></i>Köp</button>
+                                    <a class=" btn cart-btn btn-outline-success disabled"><i class="fas fa-shopping-cart me-1"></i>Köp</a>
                                 }
 
                             </div>

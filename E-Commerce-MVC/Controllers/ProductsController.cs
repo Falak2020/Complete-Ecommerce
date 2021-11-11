@@ -8,11 +8,18 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Web;
+
+using Newtonsoft.Json;
 
 namespace E_Commerce_MVC.Controllers
 {
+
+    
     public class ProductsController : Controller
     {
+     
+
         // GET: ProductsController
         public async Task<ActionResult> Index()
         {
@@ -119,5 +126,64 @@ namespace E_Commerce_MVC.Controllers
                 return View();
             }
         }
+
+        public async Task<ActionResult> AddToCart( int id)
+        {  
+           var http = new HttpClient();
+
+            var orderItems = await http.GetFromJsonAsync<List<Orderitem>>($"https://localhost:44356/api/OrderItem");
+
+            var _item = orderItems.Find(x => x.ProductId == id);
+          
+            if(_item == null)
+            {
+                var _cart = new Orderitem
+                    {
+                       ProductId = id,
+                       OrderId = 1,
+                       Quantity = 1,
+                  
+                    };
+                await http.PostAsJsonAsync("https://localhost:44356/api/OrderItem", _cart);
+            }
+
+            else
+            {
+                var _cart = new Orderitem
+                {
+                    ProductId = id,
+                    OrderId = 1,
+                    Quantity = 1,
+
+                };
+
+                await http.PutAsJsonAsync($"https://localhost:44356/api/OrderItem/{_item.Id}",_cart);
+
+            }
+
+
+           
+            return View();
+
+
+        }
+
+
+        public async Task<ActionResult> ViewCart(int orderId)
+        {
+
+            var http = new HttpClient();
+
+            var orderItems = await http.GetFromJsonAsync<List<Orderitem>>($"https://localhost:44356/api/OrderItem/{orderId}");
+           
+
+            ViewData["MyCart"] = orderItems;
+
+
+            return View();
+
+        }
+
+
     }
-}
+    }

@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewData["Title"] = "ViewCart";
+}
+
+<h1>ViewCart</h1>
+
+<ul >
+
+
+    @if (@ViewData["MyCart"] != null)
+    {
+        @foreach (var item in (List<Orderitem>)ViewData["MyCart"])
+
+        {
+
+            <li>
+                <a href="#"> @item.ProductId </a>
+            </li>
+        }
+    }
+</ul>
+

@@ -160,9 +160,9 @@ namespace Api.Controllers
                             Email = model.Email,
                             PasswordHash = new PasswordHashEntity
                             {
-                                Password = model.password
+                               Password = model.password
                             }
-
+                           
                         };
 
                         _context.Users.Add(user);

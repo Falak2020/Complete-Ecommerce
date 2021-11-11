@@ -4,6 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
+
+
 <div class="container d-flex justify-content-between my-5">
     <div>
         <h2 class="text-primary">Products List</h2>
@@ -17,9 +19,9 @@
 
     @foreach (var item in Model)
     {
-   
-    <div class="col ">
-        <a class="text-decoration-none " asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
+
+        <div class="col ">
+           <a class="text-decoration-none " asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
             <div class="card-list  h-100">
                 <div class="card-body text-dark">
                     <p class="mb-1"><h5>@Html.DisplayFor(modelItem => item.SubCategory.Category.Name)</h5> &nbsp;<small> @Html.DisplayFor(modelItem => item.SubCategory.Name)</small></p>
@@ -28,11 +30,13 @@
                     </div>
                     <h5 class="card-title space mt-5">@Html.DisplayFor(modelItem => item.Name) </h5>
                     <p class="text-danger  ">
-                       Price :  @Html.DisplayFor(modelItem => item.Price):-
-                    </p>
+                        Price :  @Html.DisplayFor(modelItem => item.Price):-
+                    </p>     
+
+
                 </div>
                 <div class="card-footer">
-                   
+
                     <div>
                         @if (item.InStock)
                         {
@@ -47,8 +51,8 @@
                 </div>
 
             </div>
-        </a>
+          </a>
         </div>
-   
-            }
-    </div>
+
+    }
+</div>

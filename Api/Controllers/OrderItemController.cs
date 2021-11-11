@@ -30,30 +30,52 @@ namespace Api.Controllers
         }
 
         // GET: api/OrderItem/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<OrderItemEntity>> GetOrderItemEntity(int id)
+       // [HttpGet("{productId}")]
+       // public async Task<ActionResult<ProductEntity>> GetmyProduct(int productId)
+  
+            
+          /*  {
+                var _product = await _context.OrderItems.Include(x => x.Product).FirstOrDefaultAsync(x => x.Product.Id == productId);
+               if (_product == null)
+
+                return new BadRequestResult();
+
+
+                return _product.Product;
+            }*/
+
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<List<OrderItemEntity>>> GetOrderItembyOrderId(int orderId)
+
+
         {
-            var orderItemEntity = await _context.OrderItems.FindAsync(id);
-
-            if (orderItemEntity == null)
-            {
-                return NotFound();
-            }
-
-            return orderItemEntity;
+            var _item = await _context.OrderItems.Where(x => x.OrderId == orderId).ToListAsync();
+            
+            return _item;
         }
 
+
+
+        [HttpGet("/api/OrderItem/Item/{productId}")]
+        public async Task<ActionResult<OrderItemEntity>> GetOrderItembyProductId(int productId)
+
+
+        {
+
+            var _item = await _context.OrderItems.FirstOrDefaultAsync(x => x.ProductId == productId);
+            if (_item == null)
+                return null;
+            return _item;
+        }
         // PUT: api/OrderItem/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrderItemEntity(int id, OrderItemEntity orderItemEntity)
         {
-            if (id != orderItemEntity.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(orderItemEntity).State = EntityState.Modified;
+            
+            var orderItem = await  _context.OrderItems.FirstOrDefaultAsync(x => x.Id == id);
+            orderItem.Quantity +=  1;
+            _context.Entry(orderItem).State = EntityState.Modified;
 
             try
             {
@@ -115,5 +137,9 @@ namespace Api.Controllers
         {
             return _context.OrderItems.Any(e => e.Id == id);
         }
+
+
+      
+     
     }
 }
