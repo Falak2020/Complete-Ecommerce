@@ -10,5 +10,6 @@ namespace E_Commerce_MVC.Models
       
         public Product product { get; set; }
         public int quantity { get; set; }
+
     }
 }

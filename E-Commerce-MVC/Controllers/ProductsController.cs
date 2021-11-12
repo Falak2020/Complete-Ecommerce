@@ -11,11 +11,28 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Newtonsoft.Json;
+using Microsoft.PowerBI.Api.Models;
 
 namespace E_Commerce_MVC.Controllers
 {
+    public static class SessionExtensions
+    {
+        public static T GetComplexData<T>(this ISession session, string key)
+        {
+            var data = session.GetString(key);
+            if (data == null)
+            {
+                return default(T);
+            }
+            return JsonConvert.DeserializeObject<T>(data);
+        }
 
-    
+        public static void SetComplexData(this ISession session, string key, object value)
+        {
+            session.SetString(key, JsonConvert.SerializeObject(value));
+        }
+    }
+
     public class ProductsController : Controller
     {
      
@@ -128,60 +145,128 @@ namespace E_Commerce_MVC.Controllers
         }
 
         public async Task<ActionResult> AddToCart( int id)
-        {  
-           var http = new HttpClient();
+        {
+            
+            
+            List<ShoppingCartItem> _prevCart = HttpContext.Session.GetComplexData<List<ShoppingCartItem>>("Cart"); // My saved shopping cart
 
-            var orderItems = await http.GetFromJsonAsync<List<Orderitem>>($"https://localhost:44356/api/OrderItem");
+           List<ShoppingCartItem> _shoppingCart =new  List<ShoppingCartItem>() ;
 
-            var _item = orderItems.Find(x => x.ProductId == id);
-          
-            if(_item == null)
+            
+            var http = new HttpClient();
+
+            var product = await http.GetFromJsonAsync<Product>($"https://localhost:44356/api/Product/{id}");
+
+            if (_prevCart == null)
             {
-                var _cart = new Orderitem
-                    {
-                       ProductId = id,
-                       OrderId = 1,
-                       Quantity = 1,
-                  
-                    };
-                await http.PostAsJsonAsync("https://localhost:44356/api/OrderItem", _cart);
-            }
+                
+                _shoppingCart.Add(new ShoppingCartItem
+                {
+                    product = product,
+                    quantity = 1
+                });
+             
+               HttpContext.Session.SetComplexData("Cart", _shoppingCart);
+               
 
+            }
             else
             {
-                var _cart = new Orderitem
+                var _product = _prevCart.Find(x => x.product.Id == id);
+
+                if (_product == null) //if  shopping cart doesnot contain the product
                 {
-                    ProductId = id,
-                    OrderId = 1,
-                    Quantity = 1,
 
-                };
+                    _prevCart.Add(new ShoppingCartItem
+                    {
+                        product = product,
+                        quantity = 1
 
-                await http.PutAsJsonAsync($"https://localhost:44356/api/OrderItem/{_item.Id}",_cart);
+                        
+                    });
+                    
+
+                    HttpContext.Session.Remove("Cart");
+                    HttpContext.Session.SetComplexData("Cart", _prevCart);
+
+                }
+                else // if  shopping cart contain the product
+                {
+                    int index = _prevCart.IndexOf(_product);
+                    _prevCart[index].quantity += 1;
+
+
+                    HttpContext.Session.Remove("Cart");
+                    HttpContext.Session.SetComplexData("Cart", _prevCart);
+                }
 
             }
 
 
-           
-            return View();
+
+
+
+
+
+
+
+            /*   var http = new HttpClient();
+
+                var orderItems = await http.GetFromJsonAsync<List<Orderitem>>($"https://localhost:44356/api/OrderItem");
+
+                var _item = orderItems.Find(x => x.ProductId == id);
+
+                if(_item == null)
+                {
+                    var _cart = new Orderitem
+                        {
+                           ProductId = id,
+                           OrderId = 1,
+                           Quantity = 1,
+
+                        };
+                    await http.PostAsJsonAsync("https://localhost:44356/api/OrderItem", _cart);
+                }
+
+                else
+                {
+                    var _cart = new Orderitem
+                    {
+                        ProductId = id,
+                        OrderId = 1,
+                        Quantity = 1,
+
+                    };
+
+                    await http.PutAsJsonAsync($"https://localhost:44356/api/OrderItem/{_item.Id}",_cart);
+
+                }
+
+            */
+            HttpContext.Session.SetInt32("Count", Count());
+            return RedirectToAction("Index", "Products");
 
 
         }
-
-
-        public async Task<ActionResult> ViewCart(int orderId)
+        public IActionResult ViewCart()
         {
+            List<ShoppingCartItem> data = HttpContext.Session.GetComplexData<List<ShoppingCartItem>>("Cart");
+            return View(data);
+        }
 
-            var http = new HttpClient();
 
-            var orderItems = await http.GetFromJsonAsync<List<Orderitem>>($"https://localhost:44356/api/OrderItem/{orderId}");
+        public int Count()
+        {
+            int count = 0;
+            List<ShoppingCartItem> data = HttpContext.Session.GetComplexData<List<ShoppingCartItem>>("Cart");
+            foreach(var item in data)
+            {
+                count = count + item.quantity;
+
+            }
+
            
-
-            ViewData["MyCart"] = orderItems;
-
-
-            return View();
-
+            return count;
         }
 
 
