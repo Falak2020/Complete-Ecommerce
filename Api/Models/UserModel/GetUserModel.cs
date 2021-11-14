@@ -14,8 +14,6 @@ namespace E_Commerce_Api.Models.UserModel
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-      
-
         public virtual ICollection<GetUsersOrdersModel> Orders { get; set; }
         public virtual ICollection<GetUserAddressModel> UserAddresses { get; set; }
 

@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Http
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow ">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow ">
     <div class="container">
 
         <a class="navbar-brand" href="#">e-Furniture</a>
@@ -12,15 +12,15 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
             <ul class="navbar-nav  ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="Products" asp-action="Index">Products</a>
+                    <a class="btn btn-outline-info me-3" asp-controller="Products" asp-action="Index">Products</a>
                 </li>
 
-                <li class="nav-item ">
-                    <a class=" btn btn-outline-secondary me-3" asp-controller="Products" asp-action="ViewCart">
-                        <i class="fas fa-cart-plus"></i>
+                <li class="nav-item">
+                    <a class=" btn btn-outline-secondary me-3 position-relative " asp-controller="ShoppingCart" asp-action="ViewCart">
+                        <i class="fas fa-cart-plus "></i>Cart
                         @if (@HttpContextAccessor.HttpContext.Session.GetInt32("Count")!= 0)
                         {
-                          <span class="text-danger">@HttpContextAccessor.HttpContext.Session.GetInt32("Count")</span>
+                          <span class="text-light position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">@HttpContextAccessor.HttpContext.Session.GetInt32("Count")</span>
                         }
                     </a>
                    
@@ -88,6 +88,3 @@
 
 </nav>
 
-<script>
-
-</script> 

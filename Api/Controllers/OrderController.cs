@@ -155,7 +155,7 @@ namespace Api.Controllers
             var _invoiceAddress = await _context.UserAddresses.Include(x => x.Address).Include(x => x.User).Where(x => x.Id == model.InvoiceAddressId).FirstOrDefaultAsync();
 
 
-            //_userAddresses = await Task.Run(() => GetUsersAddresses(User.Id));
+           
           
             if (_deliveryAddress != null && _invoiceAddress != null && User != null)
             {
@@ -206,6 +206,8 @@ namespace Api.Controllers
         {
             return _context.Orders.Any(e => e.Id == id);
         }
+
+
 
         private  async Task<List<GetUserAddressModel> >GetUsersAddresses( int id)
         {

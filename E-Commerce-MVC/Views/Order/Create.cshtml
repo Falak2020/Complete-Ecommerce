@@ -1,0 +1,88 @@
+﻿@model E_Commerce_MVC.Models.Order
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" readonly value="@HttpContextAccessor.HttpContext.Session.GetString("UserName")" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="OrderDate" class="control-label"></label>
+                <input asp-for="OrderDate" class="form-control" />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="OurReference" class="control-label"></label>
+                <input asp-for="OurReference" class="form-control" />
+                <span asp-validation-for="OurReference" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="deliveryType" class="control-label"></label>
+                
+                @Html.DropDownListFor(
+                 model => model.DeliveryTypeId,
+
+                 (IEnumerable<SelectListItem>)ViewData["DeliveryType"], "--Select Delivery Type--", new { @class = "form-control text-center fw-bold lh-lg" })
+
+                <span asp-validation-for="deliveryType" class="text-danger"></span>
+            </div>
+            <div class="h1 mt-5"> Delivery Address</div>
+            <div class="form-group mt-3">
+                <label asp-for="DeliveryAddress.AddressLine" class="control-label"></label>
+                <input asp-for="DeliveryAddress.AddressLine" class="form-control" />
+                <span asp-validation-for="DeliveryAddress.AddressLine" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="DeliveryAddress.ZipCode" class="control-label"></label>
+                <input asp-for="DeliveryAddress.ZipCode" class="form-control" />
+                <span asp-validation-for="DeliveryAddress.ZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="DeliveryAddress.City" class="control-label"></label>
+                <input asp-for="DeliveryAddress.City" class="form-control" />
+                <span asp-validation-for="DeliveryAddress.City" class="text-danger"></span>
+            </div>
+
+            <div class="h1 mt-5"> Invoice Address</div>
+            <div class="form-group mt-3">
+                <label asp-for="InvoiceAddress.AddressLine" class="control-label"></label>
+                <input asp-for="InvoiceAddress.AddressLine" class="form-control" />
+                <span asp-validation-for="InvoiceAddress.AddressLine" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="InvoiceAddress.ZipCode" class="control-label"></label>
+                <input asp-for="InvoiceAddress.ZipCode" class="form-control" />
+                <span asp-validation-for="InvoiceAddress.ZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="InvoiceAddress.City" class="control-label"></label>
+                <input asp-for="InvoiceAddress.City" class="form-control" />
+                <span asp-validation-for="InvoiceAddress.City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group  p-5">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+
+

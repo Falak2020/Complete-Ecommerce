@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace E_Commerce_MVC.Models
     {
         [Key]
         public int Id { get; set; }
+        [DisplayName("Date")]
         public DateTime OrderDate { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
@@ -25,12 +27,15 @@ namespace E_Commerce_MVC.Models
         [Required]
         public int UserId { get; set; }
 
+        [DisplayName("User Name")]
+        public string UserName { get; set; }
 
-      
-        public int? DeliveryAddressId { get; set; }
+        public DeliveryType deliveryType { get; set; }
+
+        public AddressModel DeliveryAddress{ get; set; }
 
        
-        public int? InvoiceAddressId { get; set; }
+        public AddressModel InvoiceAddress{ get; set; }
 
     }
 }

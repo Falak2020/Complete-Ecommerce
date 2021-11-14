@@ -30,7 +30,7 @@ namespace E_Commerce_MVC.Controllers
 
 
             HttpContext.Session.SetString("UserId",returnValue.Id.ToString());
-            HttpContext.Session.SetString("UserName", returnValue.FirstName.ToString());
+            HttpContext.Session.SetString("UserName", returnValue.FirstName.ToString() +" "+ returnValue.LastName.ToString());
 
             return RedirectToAction("Index","Products");
             

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace E_Commerce_MVC.Models
 {
-    public class ShoppingCart
+    public class DeliveryType
     {
-
-        public ShoppingCartItem item { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }
