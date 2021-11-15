@@ -12,8 +12,7 @@ namespace E_Commerce_MVC.Controllers
 {
     public class AutenticationController : Controller
     {
-        
-   
+
         public ActionResult SignIn()
         {
             return View();
@@ -32,7 +31,13 @@ namespace E_Commerce_MVC.Controllers
             HttpContext.Session.SetString("UserId",returnValue.Id.ToString());
             HttpContext.Session.SetString("UserName", returnValue.FirstName.ToString() +" "+ returnValue.LastName.ToString());
 
-            return RedirectToAction("Index","Products");
+            if (HttpContext.Session.GetString("Referrer") != null)
+                return RedirectToAction("Create","Order");
+
+           
+           
+
+             return RedirectToAction("Index","Products");
             
         }
 

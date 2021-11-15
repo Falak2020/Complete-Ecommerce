@@ -32,7 +32,5 @@ namespace E_Commerce_MVC.Models
 
         public virtual SubCategory SubCategory { get; set; }
 
-        public virtual ICollection<Orderitem> OrderItems { get; set; }
-
     }
 }

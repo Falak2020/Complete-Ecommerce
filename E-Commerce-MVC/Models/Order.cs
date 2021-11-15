@@ -15,6 +15,7 @@ namespace E_Commerce_MVC.Models
         [DisplayName("Date")]
         public DateTime OrderDate { get; set; }
 
+
         [Column(TypeName = "nvarchar(50)")]
         public string OurReference { get; set; }
 
@@ -27,15 +28,13 @@ namespace E_Commerce_MVC.Models
         [Required]
         public int UserId { get; set; }
 
-        [DisplayName("User Name")]
-        public string UserName { get; set; }
-
+     
         public DeliveryType deliveryType { get; set; }
 
-        public AddressModel DeliveryAddress{ get; set; }
+        public int DeliveryAddressId{ get; set; }
 
        
-        public AddressModel InvoiceAddress{ get; set; }
+        public int InvoiceAddressId{ get; set; }
 
     }
 }

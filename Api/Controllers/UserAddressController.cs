@@ -9,6 +9,7 @@ using Api.Data;
 using E_Commerce_Api.Data.Entities;
 using Api.Models.UserAddressModel;
 using Newtonsoft.Json;
+using E_Commerce_Api.Models.AddressModel;
 
 namespace Api.Controllers
 {
@@ -136,6 +137,34 @@ namespace Api.Controllers
         private bool UserAddressEntityExists(int id)
         {
             return _context.UserAddresses.Any(e => e.Id == id);
+        }
+
+        // return  all addresses which the user has
+
+
+        [HttpGet("/api/UserAddress/AllAddress/{id}")]
+        public async Task<List<GetUserAddressModel>> GetUsersAddresses(int id)
+        {
+            var _userAddresses = new List<GetUserAddressModel>();
+            foreach (var address in await _context.UserAddresses.Where(x => x.UserId == id).Include(x => x.Address).ToListAsync())
+            {
+                _userAddresses.Add(new GetUserAddressModel
+                {
+                    Id = address.Id,
+                    UserId = address.UserId,
+                    AddressId = address.AddressId,
+                    Address = new GetAddressModel
+                    {
+                        Id = address.Address.Id,
+                        AddressLine = address.Address.AddressLine,
+                        ZipCode = address.Address.ZipCode,
+                        City = address.Address.City
+                    }
+                });
+            }
+
+            return _userAddresses;
+
         }
     }
 }

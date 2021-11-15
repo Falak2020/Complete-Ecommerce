@@ -208,7 +208,6 @@ namespace Api.Controllers
         }
 
 
-
         private  async Task<List<GetUserAddressModel> >GetUsersAddresses( int id)
         {
             var _userAddresses = new List<GetUserAddressModel>();

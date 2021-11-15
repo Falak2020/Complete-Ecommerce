@@ -5,16 +5,14 @@
 }
 
 
-<div class="row mt-5">
-    <div class="col-md-4">
-        <form asp-action="Create">
+
+<div class="row mt-5 d-flex justify-content-center">
+    
+    <div class="col-md-8 mt-5">
+        <form asp-controller="Order" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" readonly value="@HttpContextAccessor.HttpContext.Session.GetString("UserName")" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
+            <h4 class="mb-5 text-primary"> Hej @HttpContextAccessor.HttpContext.Session.GetString("UserName") vär snäll och fyll i dina information</h4>
 
             <div class="form-group mt-3">
                 <label asp-for="OrderDate" class="control-label"></label>
@@ -43,40 +41,31 @@
             </div>
             <div class="h1 mt-5"> Delivery Address</div>
             <div class="form-group mt-3">
-                <label asp-for="DeliveryAddress.AddressLine" class="control-label"></label>
-                <input asp-for="DeliveryAddress.AddressLine" class="form-control" />
-                <span asp-validation-for="DeliveryAddress.AddressLine" class="text-danger"></span>
+                <label asp-for="DeliveryAddressId" class="control-label"></label>
+
+                @Html.DropDownListFor(
+                 model => model.DeliveryAddressId,
+
+                 (IEnumerable<SelectListItem>)ViewData["Addresses"], "--Select Delivery Address--", new { @class = "form-control text-center fw-bold lh-lg" })
+
+                <span asp-validation-for="DeliveryAddressId" class="text-danger"></span>
             </div>
-            <div class="form-group mt-3">
-                <label asp-for="DeliveryAddress.ZipCode" class="control-label"></label>
-                <input asp-for="DeliveryAddress.ZipCode" class="form-control" />
-                <span asp-validation-for="DeliveryAddress.ZipCode" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <label asp-for="DeliveryAddress.City" class="control-label"></label>
-                <input asp-for="DeliveryAddress.City" class="form-control" />
-                <span asp-validation-for="DeliveryAddress.City" class="text-danger"></span>
-            </div>
+
 
             <div class="h1 mt-5"> Invoice Address</div>
             <div class="form-group mt-3">
-                <label asp-for="InvoiceAddress.AddressLine" class="control-label"></label>
-                <input asp-for="InvoiceAddress.AddressLine" class="form-control" />
-                <span asp-validation-for="InvoiceAddress.AddressLine" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <label asp-for="InvoiceAddress.ZipCode" class="control-label"></label>
-                <input asp-for="InvoiceAddress.ZipCode" class="form-control" />
-                <span asp-validation-for="InvoiceAddress.ZipCode" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <label asp-for="InvoiceAddress.City" class="control-label"></label>
-                <input asp-for="InvoiceAddress.City" class="form-control" />
-                <span asp-validation-for="InvoiceAddress.City" class="text-danger"></span>
+                <label asp-for="InvoiceAddressId" class="control-label"></label>
+
+                @Html.DropDownListFor(
+                 model => model.InvoiceAddressId,
+
+                 (IEnumerable<SelectListItem>)ViewData["Addresses"], "--Select Invoice Address--", new { @class = "form-control text-center fw-bold lh-lg" })
+
+                <span asp-validation-for="InvoiceAddressId" class="text-danger"></span>
             </div>
 
-            <div class="form-group  p-5">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group  py-5">
+                <input type="submit" value="Skicka order" class="btn btn-primary" />
             </div>
 
 
