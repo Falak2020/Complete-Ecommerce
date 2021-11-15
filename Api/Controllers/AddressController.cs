@@ -101,7 +101,9 @@ namespace Api.Controllers
             _context.Addresses.Add(address);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAddressEntity", new { id = address.Id }, address);
+             CreatedAtAction("GetAddressEntity", new { id = address.Id }, address);
+
+            return Ok(address);
         }
 
         // DELETE: api/Address/5
@@ -124,5 +126,6 @@ namespace Api.Controllers
         {
             return _context.Addresses.Any(e => e.Id == id);
         }
+
     }
 }

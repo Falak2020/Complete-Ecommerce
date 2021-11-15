@@ -1,0 +1,68 @@
+﻿@model E_Commerce_MVC.Models.User.SignUp
+
+
+
+@{
+    ViewData["Title"] = "SignUp";
+}
+
+
+
+<div class="row d-flex justify-content-center mt-5">
+
+    <div class="col-md-4 border p-5 bg-white shadow-lg">
+        <h1 class="text-center py-5 text-style text-primary"> SIGN IN </h1>
+        <form asp-action="SignUp">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label fw-bold"></label><i class="text-danger fas fa-star"></i>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label fw-bold"></label><i class="text-danger fas fa-star"></i>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label fw-bold"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label fw-bold"></label><i class="text-danger fas fa-star"></i>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <h4 class="mt-5 text-primary"> User Address </h4>
+
+
+            <div class="form-group">
+                <label asp-for="address.AddressLine" class="control-label fw-bold"></label><i class="text-danger fas fa-star"></i>
+                <input asp-for="address.AddressLine" class="form-control" />
+                <span asp-validation-for="address.AddressLine" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="address.ZipCode" class="control-label fw-bold"></label><i class="text-danger fas fa-star"></i>
+                <input asp-for="address.ZipCode" class="form-control" />
+                <span asp-validation-for="address.ZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="address.City" class="control-label fw-bold"></label><i class="text-danger fas fa-star"></i>
+                <input asp-for="address.City" class="form-control" />
+                <span asp-validation-for="address.City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group py-5">
+                <input type="submit" value="Sign Up" class="btn btn-primary form-control" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
