@@ -46,7 +46,8 @@ namespace Api.Controllers
                             OrderId = order.Id,
                             ProductId = item.ProductId,
                             UnitPrice = item.UnitPrice,
-                            Quantity = item.Quantity
+                            Quantity = item.Quantity,
+                          
 
                         });
                     }
@@ -99,16 +100,41 @@ namespace Api.Controllers
 
         // GET: api/Order/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderEntity>> GetOrderEntity(int id)
+        public async Task<ActionResult<GetOneOrderModel>> GetOrderEntity(int id)
         {
-            var orderEntity = await _context.Orders.FindAsync(id);
-
-            if (orderEntity == null)
+            var _order = await _context.Orders.Include(x=>x.DeliveryType).Include(x=>x.OrderItems).FirstOrDefaultAsync(x=> x.Id == id);
+         
+            if (_order == null)
             {
                 return NotFound();
             }
 
-            return orderEntity;
+            var OrderItemsCollection = new List<GetOrderItemModel>();
+            foreach (var item in await _context.OrderItems.Include(x => x.Product).Where(item => item.OrderId == _order.Id).ToListAsync())
+            {
+                if (item != null)
+                {
+                    OrderItemsCollection.Add(new GetOrderItemModel
+                    {
+                        Id = item.Id,
+                        OrderId = _order.Id,
+                        ProductId = item.ProductId,
+                        UnitPrice = item.UnitPrice,
+                        Quantity = item.Quantity,
+                        product = item.Product
+
+                    });
+                }
+
+            }
+            return new GetOneOrderModel { 
+            OrderDate = _order.OrderDate,
+            OurReference = _order.OurReference,
+            Status = _order.Status,
+            DeliveryTypeName = _order.DeliveryType.Name,
+            OrderItems = OrderItemsCollection
+            
+            };
         }
 
         // PUT: api/Order/5
@@ -229,8 +255,77 @@ namespace Api.Controllers
             }
 
             return _userAddresses;
-
-
         }
+
+        [HttpGet("UserOrder/{userId}")]
+        public async Task<ActionResult<List<GetOrderModel>>> UserOrders(int userId)
+        {
+            var orders = new List<GetOrderModel>();
+
+
+            foreach (var order in await _context.Orders.Include(x => x.User).Include(x => x.DeliveryType).Where(x=> x.UserId == userId).ToListAsync())
+            {
+                var OrderItemsCollection = new List<GetOrderItemModel>();
+                foreach (var item in await _context.OrderItems.Where(item => item.OrderId == order.Id).ToListAsync()) //Bring all order Items for one order
+                {
+                    if (item != null)
+                    {
+                        OrderItemsCollection.Add(new GetOrderItemModel
+                        {
+                            Id = item.Id,
+                            OrderId = order.Id,
+                            ProductId = item.ProductId,
+                            UnitPrice = item.UnitPrice,
+                            Quantity = item.Quantity
+
+                        });
+                    }
+
+                }
+
+                var _deliveryAddress = await _context.UserAddresses.Include(x => x.Address).Include(x => x.User).Where(x => x.Id == order.DeliveryAddressId).FirstOrDefaultAsync();
+                var _invoiceAddress = await _context.UserAddresses.Include(x => x.Address).Include(x => x.User).Where(x => x.Id == order.InvoiceAddressId).FirstOrDefaultAsync();
+
+                orders.Add(new GetOrderModel
+                {
+                    Id = order.Id,
+                    OrderDate = order.OrderDate,
+                    OurReference = order.OurReference,
+                    Status = order.Status,
+                    DeliveryTypeName = order.DeliveryType.Name,
+                    DeliveryAddress = new GetAddressModel
+                    {
+                        Id = _deliveryAddress.Address.Id,
+                        AddressLine = _deliveryAddress.Address.AddressLine,
+                        ZipCode = _deliveryAddress.Address.ZipCode,
+                        City = _deliveryAddress.Address.City
+
+                    },
+                    InvoiceAddress = new GetAddressModel
+                    {
+                        Id = _invoiceAddress.Address.Id,
+                        AddressLine = _invoiceAddress.Address.AddressLine,
+                        ZipCode = _invoiceAddress.Address.ZipCode,
+                        City = _invoiceAddress.Address.City
+
+                    },
+                    User = new GetOrdersUserModel
+                    {
+                        Id = order.User.Id,
+                        FirstName = order.User.FirstName,
+                        LastName = order.User.LastName,
+                        Email = order.User.Email,
+
+
+                    },
+
+                    OrderItems = OrderItemsCollection
+
+                });
+            }
+            return orders;
+        }       
+
+
     }
 }

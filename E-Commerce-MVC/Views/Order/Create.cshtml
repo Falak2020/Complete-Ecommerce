@@ -4,74 +4,76 @@
     ViewData["Title"] = "Create";
 }
 
+<div class="container">
+    <div class="row mt-5 d-flex justify-content-center">
+
+        <div class="col-md-8 mt-5 border p-5 bg-white shadow-lg">
+            <form asp-controller="Order" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <h4 class="mb-5 text-primary"> Hej @HttpContextAccessor.HttpContext.Session.GetString("UserName") vär snäll och fyll i dina information</h4>
+
+                <div class="form-group mt-3">
+                    <label asp-for="OrderDate" class="control-label"></label>
+                    <input asp-for="OrderDate" class="form-control" value="@DateTime.Today" type="datetime" />
+                    <span asp-validation-for="OrderDate" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <label asp-for="OurReference" class="control-label"></label>
+                    <input asp-for="OurReference" class="form-control" />
+                    <span asp-validation-for="OurReference" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <label asp-for="Status" class="control-label"></label>
+                    <input asp-for="Status" class="form-control" />
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <label asp-for="deliveryType" class="control-label"></label>
+
+                    @Html.DropDownListFor(
+                     model => model.DeliveryTypeId,
+
+                     (IEnumerable<SelectListItem>)ViewData["DeliveryType"], "--Select Delivery Type--", new { @class = "form-control text-center fw-bold lh-lg" })
+
+                    <span asp-validation-for="deliveryType" class="text-danger"></span>
+                </div>
+                <div class="h1 mt-5"> Delivery Address</div>
+                <div class="form-group mt-3">
+                    <label asp-for="DeliveryAddressId" class="control-label"></label>
+
+                    @Html.DropDownListFor(
+                     model => model.DeliveryAddressId,
+
+                     (IEnumerable<SelectListItem>)ViewData["Addresses"], "--Select Delivery Address--", new { @class = "form-control text-center fw-bold lh-lg" })
+
+                    <span asp-validation-for="DeliveryAddressId" class="text-danger"></span>
+                </div>
 
 
-<div class="row mt-5 d-flex justify-content-center">
+                <div class="h1 mt-5"> Invoice Address</div>
+                <div class="form-group mt-3">
+                    <label asp-for="InvoiceAddressId" class="control-label"></label>
 
-    <div class="col-md-8 mt-5 border p-5 bg-white shadow-lg">
-        <form asp-controller="Order" asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @Html.DropDownListFor(
+                     model => model.InvoiceAddressId,
 
-            <h4 class="mb-5 text-primary"> Hej @HttpContextAccessor.HttpContext.Session.GetString("UserName") vär snäll och fyll i dina information</h4>
+                     (IEnumerable<SelectListItem>)ViewData["Addresses"], "--Select Invoice Address--", new { @class = "form-control text-center fw-bold lh-lg" })
 
-            <div class="form-group mt-3">
-                <label asp-for="OrderDate" class="control-label"></label>
-                <input asp-for="OrderDate" class="form-control" value="@DateTime.Today" type="datetime" />
-                <span asp-validation-for="OrderDate" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <label asp-for="OurReference" class="control-label"></label>
-                <input asp-for="OurReference" class="form-control" />
-                <span asp-validation-for="OurReference" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <label asp-for="deliveryType" class="control-label"></label>
+                    <span asp-validation-for="InvoiceAddressId" class="text-danger"></span>
+                </div>
 
-                @Html.DropDownListFor(
-                 model => model.DeliveryTypeId,
-
-                 (IEnumerable<SelectListItem>)ViewData["DeliveryType"], "--Select Delivery Type--", new { @class = "form-control text-center fw-bold lh-lg" })
-
-                <span asp-validation-for="deliveryType" class="text-danger"></span>
-            </div>
-            <div class="h1 mt-5"> Delivery Address</div>
-            <div class="form-group mt-3">
-                <label asp-for="DeliveryAddressId" class="control-label"></label>
-
-                @Html.DropDownListFor(
-                 model => model.DeliveryAddressId,
-
-                 (IEnumerable<SelectListItem>)ViewData["Addresses"], "--Select Delivery Address--", new { @class = "form-control text-center fw-bold lh-lg" })
-
-                <span asp-validation-for="DeliveryAddressId" class="text-danger"></span>
-            </div>
+                <div class="form-group  py-5">
+                    <input type="submit" value="SEND ORDER" class="btn btn-primary" />
+                </div>
 
 
-            <div class="h1 mt-5"> Invoice Address</div>
-            <div class="form-group mt-3">
-                <label asp-for="InvoiceAddressId" class="control-label"></label>
-
-                @Html.DropDownListFor(
-                 model => model.InvoiceAddressId,
-
-                 (IEnumerable<SelectListItem>)ViewData["Addresses"], "--Select Invoice Address--", new { @class = "form-control text-center fw-bold lh-lg" })
-
-                <span asp-validation-for="InvoiceAddressId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group  py-5">
-                <input type="submit" value="SEND ORDER" class="btn btn-primary" />
-            </div>
-
-
-        </form>
+            </form>
+        </div>
     </div>
 </div>
+
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

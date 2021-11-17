@@ -1,0 +1,67 @@
+﻿@model IEnumerable<E_Commerce_MVC.Models.User.MyOrder>
+
+@{
+    ViewData["Title"] = "Index";
+}
+   
+
+<div class="container mt-5">
+    @if (Model != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OurReference)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DeliveryTypeName)
+                    </th>
+                    
+                   
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OurReference)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeliveryTypeName)
+                        </td>
+                        <td>
+
+                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                          
+                        </td>
+ 
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+
+
+    else
+    {
+        <h1 class="text-center mt-5">There is not any order to view</h1>
+    }
+</div>

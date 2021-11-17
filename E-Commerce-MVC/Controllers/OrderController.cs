@@ -1,4 +1,5 @@
 ﻿using E_Commerce_MVC.Controllers;
+using E_Commerce_MVC.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,19 +15,17 @@ namespace E_Commerce_MVC.Models
 {
     public class OrderController : Controller
     {
-        
-        
-        
-        // GET: OrderController
-        public ActionResult Index()
+        //Get all order för en spsific user
+        public async Task<ActionResult> Index()
         {
-            return View();
-        }
+            var http = new HttpClient();
 
-        // GET: OrderController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
+            var _orders = await http.GetFromJsonAsync<List<MyOrder>>($"https://localhost:44356/api/Order/UserOrder/{HttpContext.Session.GetString("UserId") }");
+
+            if (_orders.Count > 0)
+                return View(_orders);
+            else
+                return View(null);
         }
 
         // GET: OrderController/Create
@@ -37,19 +36,16 @@ namespace E_Commerce_MVC.Models
 
             if (HttpContext.Session.GetString("UserId") == null)
             {
-                HttpContext.Session.SetString ("Referrer",uri);
+               // HttpContext.Session.SetString ("Referrer",uri);
 
                 return RedirectToAction("SignIn", "Autentication", new {ReturnUrl = uri });
-            }
-
-
-               
+            }       
 
             else
             {
                 List<SelectListItem> list = new List<SelectListItem>(); //save delivery types
 
-                List<SelectListItem> Addresses = new List<SelectListItem>(); // save user addresses 
+                List<SelectListItem> Addresses = new List<SelectListItem>(); // save user addresses one user can has two addresses
                 var http = new HttpClient();
 
                 var _deliveryType = await http.GetFromJsonAsync<List<DeliveryType>>("https://localhost:44356/api/DeliveryType");
@@ -83,9 +79,7 @@ namespace E_Commerce_MVC.Models
 
                 return View();
 
-            }
-           
-
+            }           
         }
 
         // POST: OrderController/Create
@@ -133,9 +127,8 @@ namespace E_Commerce_MVC.Models
                 HttpContext.Session.Remove("Count");
                 HttpContext.Session.Remove("TotalPrice");
 
-
-
-                return RedirectToAction("Index" ,"Products");
+            return RedirectToAction("Index" ,"Products");
+              
             }
             catch
             {
@@ -143,46 +136,14 @@ namespace E_Commerce_MVC.Models
             }
         }
 
-        // GET: OrderController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
-        }
+            var http = new HttpClient();
 
-        // POST: OrderController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var _order = await http.GetFromJsonAsync<MyOrder>($"https://localhost:44356/api/Order/{id}");
 
-        // GET: OrderController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            return View(_order);
 
-        // POST: OrderController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

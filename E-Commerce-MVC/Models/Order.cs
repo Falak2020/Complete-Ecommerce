@@ -28,13 +28,13 @@ namespace E_Commerce_MVC.Models
         [Required]
         public int UserId { get; set; }
 
-     
+
         public DeliveryType deliveryType { get; set; }
 
-        public int DeliveryAddressId{ get; set; }
+        public int DeliveryAddressId { get; set; }
 
-       
-        public int InvoiceAddressId{ get; set; }
+
+        public int InvoiceAddressId { get; set; }
 
     }
 }

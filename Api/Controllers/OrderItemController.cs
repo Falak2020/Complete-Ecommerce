@@ -29,20 +29,7 @@ namespace Api.Controllers
             return await _context.OrderItems.ToListAsync();
         }
 
-        // GET: api/OrderItem/5
-       // [HttpGet("{productId}")]
-       // public async Task<ActionResult<ProductEntity>> GetmyProduct(int productId)
-  
-            
-          /*  {
-                var _product = await _context.OrderItems.Include(x => x.Product).FirstOrDefaultAsync(x => x.Product.Id == productId);
-               if (_product == null)
-
-                return new BadRequestResult();
-
-
-                return _product.Product;
-            }*/
+      
 
         [HttpGet("{orderId}")]
         public async Task<ActionResult<List<OrderItemEntity>>> GetOrderItembyOrderId(int orderId)
@@ -67,8 +54,8 @@ namespace Api.Controllers
                 return null;
             return _item;
         }
-        // PUT: api/OrderItem/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
+        // Increment quantity
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrderItemEntity(int id, OrderItemEntity orderItemEntity)
         {

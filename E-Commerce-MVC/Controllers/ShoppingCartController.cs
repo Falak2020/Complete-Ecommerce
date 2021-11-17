@@ -70,8 +70,6 @@ public class ShoppingCartController : Controller
                     {
                         product = product,
                         quantity = 1
-
-
                     });
 
 
@@ -79,7 +77,7 @@ public class ShoppingCartController : Controller
                     HttpContext.Session.SetComplexData("Cart", _prevCart);
 
                 }
-                else // if  shopping cart contain the product
+                else // if  shopping cart contain the product increment quantity
                 {
                     int index = _prevCart.IndexOf(_product);
                     _prevCart[index].quantity += 1;
