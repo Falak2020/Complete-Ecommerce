@@ -7,8 +7,8 @@
 
 
 <div class="row mt-5 d-flex justify-content-center">
-    
-    <div class="col-md-8 mt-5">
+
+    <div class="col-md-8 mt-5 border p-5 bg-white shadow-lg">
         <form asp-controller="Order" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -16,7 +16,7 @@
 
             <div class="form-group mt-3">
                 <label asp-for="OrderDate" class="control-label"></label>
-                <input asp-for="OrderDate" class="form-control" />
+                <input asp-for="OrderDate" class="form-control" value="@DateTime.Today" type="datetime" />
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
@@ -31,7 +31,7 @@
             </div>
             <div class="form-group mt-3">
                 <label asp-for="deliveryType" class="control-label"></label>
-                
+
                 @Html.DropDownListFor(
                  model => model.DeliveryTypeId,
 
@@ -65,7 +65,7 @@
             </div>
 
             <div class="form-group  py-5">
-                <input type="submit" value="Skicka order" class="btn btn-primary" />
+                <input type="submit" value="SEND ORDER" class="btn btn-primary" />
             </div>
 
 
@@ -73,5 +73,8 @@
     </div>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
 
 

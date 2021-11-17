@@ -12,7 +12,7 @@
    
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="bg-light">
+<body class="bg-light page-container">
     @await Html.PartialAsync("_NavbarPartial")
 
     <form class="d-flex input-group-append container mt-3  ">
@@ -20,13 +20,18 @@
         <button class="btn btn-outline-success me-3" type="submit"><i class="fas fa-search"></i></button>
     </form>
 
-    <div class="container">
+    <div class="container ">
         @RenderBody()
 
 
 
     </div>
 
+    <footer class="border-top footer text-white py-3 bg-secondary mt-5">
+        <div class="container text-center">
+            &copy; 2021 - e-Furniture- <a asp-area="" asp-controller="Home" asp-action="Index" class="text-white ms-3">Home</a>
+        </div>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

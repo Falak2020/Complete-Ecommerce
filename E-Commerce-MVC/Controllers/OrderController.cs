@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,6 @@ namespace E_Commerce_MVC.Models
 {
     public class OrderController : Controller
     {
-        
-        
-        
-        
         
         
         
@@ -35,11 +32,14 @@ namespace E_Commerce_MVC.Models
         // GET: OrderController/Create
         public async Task<ActionResult> Create()
         {
+
+            var uri = Request.Path.Value;
+
             if (HttpContext.Session.GetString("UserId") == null)
             {
-                HttpContext.Session.SetString ("Referrer",System.IO.Path.GetFileName(Request.Path.ToString()));
+                HttpContext.Session.SetString ("Referrer",uri);
 
-                return RedirectToAction("SignIn", "Autentication");
+                return RedirectToAction("SignIn", "Autentication", new {ReturnUrl = uri });
             }
 
 

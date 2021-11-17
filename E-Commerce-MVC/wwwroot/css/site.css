@@ -31,3 +31,14 @@ font-size:1rem;
    font-family: 'Times New Roman', Times, serif;
 }
 
+.page-container {
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 10rem;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}

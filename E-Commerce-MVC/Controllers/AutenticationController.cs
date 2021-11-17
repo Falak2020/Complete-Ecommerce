@@ -18,33 +18,42 @@ namespace E_Commerce_MVC.Controllers
         [HttpGet]
         public ActionResult SignIn()
         {
+            
             return View();
         }
 
       [HttpPost]
-        public async Task<ActionResult> SignIn(LogIn model)
+        public async Task<ActionResult> SignIn(LogIn model,string ReturnUrl)
         {
             var http = new HttpClient();
            
              var result = await http.PostAsJsonAsync("https://localhost:44356/api/User/LogIn", model);
 
-             var returnValue = await result.Content.ReadFromJsonAsync<UserModel>();
+          
 
+            if (result.IsSuccessStatusCode)
+            {
+                var returnValue = await result.Content.ReadFromJsonAsync<UserModel>();
+                HttpContext.Session.SetString("UserId", returnValue.Id.ToString());
+                HttpContext.Session.SetString("UserName", returnValue.FirstName.ToString() + " " + returnValue.LastName.ToString());
 
-            HttpContext.Session.SetString("UserId",returnValue.Id.ToString());
-            HttpContext.Session.SetString("UserName", returnValue.FirstName.ToString() +" "+ returnValue.LastName.ToString());
+                if (!string.IsNullOrEmpty(ReturnUrl))
+                {
+                    /*var url = HttpContext.Session.GetString("Referrer");
+                    HttpContext.Session.Remove("Referrer");*/
 
-            if (HttpContext.Session.GetString("Referrer") != null)
-            { 
-              HttpContext.Session.Remove("Referrer");
-              return RedirectToAction("Create","Order");
-              
+                    return Redirect(ReturnUrl);
+
+                }
+
+                return RedirectToAction("Index", "Products");
 
             }
-                
-           
-
-             return RedirectToAction("Index","Products");
+            else
+            {
+                ViewData["error"] = "the email or password is wrong";
+                return View();
+            }          
             
         }
 
@@ -65,43 +74,40 @@ namespace E_Commerce_MVC.Controllers
 
             var result = await http.PostAsJsonAsync("https://localhost:44356/api/User/Register", model);
 
-            var returnValue = await result.Content.ReadFromJsonAsync<UserModel>();
-
-
-            HttpContext.Session.SetString("UserId", returnValue.Id.ToString());
-            HttpContext.Session.SetString("UserName", returnValue.FirstName.ToString() + " " + returnValue.LastName.ToString());
-
-            // user address
-
-            var address = new AddressModel
+            if (result.IsSuccessStatusCode)
             {
-                AddressLine = model.address.AddressLine,
-                ZipCode = model.address.ZipCode,
-                City = model.address.City
-            };
+                var returnValue = await result.Content.ReadFromJsonAsync<UserModel>();
+                HttpContext.Session.SetString("UserId", returnValue.Id.ToString());
+                HttpContext.Session.SetString("UserName", returnValue.FirstName.ToString() + " " + returnValue.LastName.ToString());
 
-            var _addressRes = await http.PostAsJsonAsync("https://localhost:44356/api/Address", address);
-            var _address = await _addressRes.Content.ReadFromJsonAsync<AddressModel>();
-            await http.PostAsJsonAsync("https://localhost:44356/api/UserAddress", 
-                
-                new UserAddress {
-                    UserId = returnValue.Id,
-                    AddressId = _address.Id
-            });
+                // user address
 
-          
+                var address = new AddressModel
+                {
+                    AddressLine = model.address.AddressLine,
+                    ZipCode = model.address.ZipCode,
+                    City = model.address.City
+                };
 
-            if (HttpContext.Session.GetString("Referrer") != null)
-            {
-                HttpContext.Session.Remove("Referrer");
-                return RedirectToAction("Create", "Order");
+                var _addressRes = await http.PostAsJsonAsync("https://localhost:44356/api/Address", address);
+                var _address = await _addressRes.Content.ReadFromJsonAsync<AddressModel>();
+                await http.PostAsJsonAsync("https://localhost:44356/api/UserAddress",
+                   new UserAddress
+                    {
+                        UserId = returnValue.Id,
+                        AddressId = _address.Id
+                    });
 
-
+                return RedirectToAction("Index", "Products");
             }
 
 
+            else
+            {
+                ViewData["error"] = "The Email is already existed";
+                return View();
+            }
 
-            return RedirectToAction("Index", "Products");
 
         }
         #endregion

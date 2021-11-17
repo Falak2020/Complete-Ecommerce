@@ -32,82 +32,7 @@ namespace E_Commerce_MVC.Controllers
 }
 public class ShoppingCartController : Controller
     {
-        // GET: ShoppingCartController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: ShoppingCartController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: ShoppingCartController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ShoppingCartController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ShoppingCartController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: ShoppingCartController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ShoppingCartController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ShoppingCartController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-
+       
         public async Task<ActionResult> AddToCart(int id)
         {
 
@@ -174,6 +99,8 @@ public class ShoppingCartController : Controller
 
 
         }
+
+
         public IActionResult ViewCart()
         {
             List<ShoppingCartItem> data = HttpContext.Session.GetComplexData<List<ShoppingCartItem>>("Cart");
@@ -223,14 +150,26 @@ public class ShoppingCartController : Controller
             else
                 _Cart.RemoveAt(index);
 
-            HttpContext.Session.Remove("Cart");
-            HttpContext.Session.SetComplexData("Cart", _Cart);
+            //Check if the shopping cart is empty
 
-            HttpContext.Session.Remove("Count");
-            HttpContext.Session.SetInt32("Count", Count());
+            if(_Cart.Count>0)
+            {
+                HttpContext.Session.Remove("Cart");
+                HttpContext.Session.SetComplexData("Cart", _Cart);
 
-            HttpContext.Session.Remove("TotalPrice");
-            HttpContext.Session.SetInt32("TotalPrice", TotalPrice());
+                HttpContext.Session.Remove("Count");
+                HttpContext.Session.SetInt32("Count", Count());
+
+                HttpContext.Session.Remove("TotalPrice");
+                HttpContext.Session.SetInt32("TotalPrice", TotalPrice());
+
+            }
+            else
+            {
+                HttpContext.Session.Remove("Cart");
+                HttpContext.Session.Remove("Count");
+                HttpContext.Session.Remove("TotalPrice");
+            }
 
             return RedirectToAction("ViewCart", _Cart);
         }

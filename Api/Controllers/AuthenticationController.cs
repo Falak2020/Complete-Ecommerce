@@ -59,14 +59,17 @@ namespace Api.Controllers
         [HttpPost("/api/User/LogIn")]
         public async Task<ActionResult<UserEntity>> LogIn(LogInModel model)
         {
-            var _user = await _context.Users.Where(x => x.Email == model.Email).FirstOrDefaultAsync();
+            var _user = await _context.Users.Include(x => x.PasswordHash).FirstOrDefaultAsync(x=> x.Email == model.Email);
             if (_user == null)
             {
                 return new BadRequestObjectResult("The Email adress or password is wrong");
             }
-
+   
+            if(_user.PasswordHash.Password.ToString() == model.password.ToString())
+                return  Ok(_user);    
             else
-                return  Ok(_user);
+            return new BadRequestObjectResult("The password is wrong");
+            
         }
 
         #endregion

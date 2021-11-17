@@ -15,7 +15,7 @@ namespace E_Commerce_MVC.Models
         [DisplayName("Date")]
         public DateTime OrderDate { get; set; }
 
-
+        [Required]
         [Column(TypeName = "nvarchar(50)")]
         public string OurReference { get; set; }
 

@@ -54,6 +54,10 @@
                 <span asp-validation-for="address.City" class="text-danger"></span>
             </div>
 
+            @if (ViewData["error"] != null)
+            {
+                <p class="text-danger"> @ViewData["error"]</p>
+            }
             <div class="form-group py-5">
                 <input type="submit" value="Sign Up" class="btn btn-primary form-control" />
             </div>
