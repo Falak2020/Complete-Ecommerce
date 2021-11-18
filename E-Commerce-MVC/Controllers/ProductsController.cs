@@ -19,7 +19,28 @@ namespace E_Commerce_MVC.Controllers
 
     public class ProductsController : Controller
     {
-     
+
+
+        public async Task<IActionResult> Filter(SearchModel search)
+        {
+            var http = new HttpClient();
+
+            var products = await http.GetFromJsonAsync<List<Product>>("https://localhost:44356/api/Product");
+
+            if (!string.IsNullOrEmpty(search.Query))
+            {
+                //var filteredResult = allMovies.Where(n => n.Name.ToLower().Contains(searchString.ToLower()) || n.Description.ToLower().Contains(searchString.ToLower())).ToList();
+
+                var filteredResultNew = products.Where(n => string.Equals(n.Name, search.Query, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                if(filteredResultNew.Count>0)
+                    return View("Index", filteredResultNew);
+                else
+                    return View("Index", products);
+            }
+                 
+            return View("Index",products);
+        }
+
 
         // GET: ProductsController
         public async Task<ActionResult> Index()
@@ -57,8 +78,7 @@ namespace E_Commerce_MVC.Controllers
                 });
 
             }
-           
-               
+                
 
                     ViewData["SubCategory"] =list;
 

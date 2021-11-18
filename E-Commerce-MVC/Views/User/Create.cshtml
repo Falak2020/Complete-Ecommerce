@@ -1,0 +1,41 @@
+﻿@model E_Commerce_MVC.Models.AddressModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container  mt-5">
+    
+    <div class="row d-flex justify-content-center">
+
+        <div class="col-md-6">
+            <h4 class="my-5 text-primary">Add new address</h4>
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="AddressLine" class="control-label"></label>
+                    <input asp-for="AddressLine" class="form-control" />
+                    <span asp-validation-for="AddressLine" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ZipCode" class="control-label"></label>
+                    <input asp-for="ZipCode" class="form-control" />
+                    <span asp-validation-for="ZipCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="City" class="control-label"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                    <a class="btn btn-primary" asp-controller="User" asp-action="GetAddress" >Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+

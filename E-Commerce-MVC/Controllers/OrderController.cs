@@ -145,5 +145,16 @@ namespace E_Commerce_MVC.Models
             return View(_order);
 
         }
+
+
+        public async Task<ActionResult> Delete(int id)
+        {
+            var http = new HttpClient();
+
+             await http.DeleteAsync($"https://localhost:44356/api/Order/{id}");
+
+            return RedirectToAction("Index");
+
+        }
     }
 }

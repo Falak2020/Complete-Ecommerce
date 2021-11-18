@@ -1,0 +1,58 @@
+﻿@model IEnumerable<E_Commerce_MVC.Models.UserAddress>
+
+@{
+    ViewData["Title"] = "GetAddress";
+}
+
+<div class="container mt-5">
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Add New Address</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address.AddressLine)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address.ZipCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address.City)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address.AddressLine)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address.ZipCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address.City)
+                </td>
+              
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

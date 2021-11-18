@@ -12,6 +12,7 @@ using E_Commerce_Api.Models.OrderItemModel;
 using E_Commerce_Api.Models.AddressModel;
 using Api.Models.UserAddressModel;
 using Newtonsoft.Json;
+using Api.Models.OrderModel;
 
 namespace Api.Controllers
 {
@@ -140,14 +141,18 @@ namespace Api.Controllers
         // PUT: api/Order/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderEntity(int id, OrderEntity orderEntity)
+        public async Task<IActionResult> PutOrderEntity(int id,EditModel model)
         {
-            if (id != orderEntity.Id)
-            {
-                return BadRequest();
-            }
+         
+            var _order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
 
-            _context.Entry(orderEntity).State = EntityState.Modified;
+           
+            _order.InvoiceAddressId = model.InvoiceAddressId;
+            _order.DeliveryAddressId = model.DeliveryAddressId;
+            _order.Status = model.Status;
+            _order.DeliveryTypeId = model.DeliveryTypeId;
+
+            _context.Entry(_order).State = EntityState.Modified;
 
             try
             {
@@ -233,7 +238,7 @@ namespace Api.Controllers
             return _context.Orders.Any(e => e.Id == id);
         }
 
-
+// Get all addresses which the user have
         private  async Task<List<GetUserAddressModel> >GetUsersAddresses( int id)
         {
             var _userAddresses = new List<GetUserAddressModel>();
@@ -257,11 +262,12 @@ namespace Api.Controllers
             return _userAddresses;
         }
 
+
+        // Get all orders which belong to one user
         [HttpGet("UserOrder/{userId}")]
         public async Task<ActionResult<List<GetOrderModel>>> UserOrders(int userId)
         {
             var orders = new List<GetOrderModel>();
-
 
             foreach (var order in await _context.Orders.Include(x => x.User).Include(x => x.DeliveryType).Where(x=> x.UserId == userId).ToListAsync())
             {
