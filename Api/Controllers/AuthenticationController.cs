@@ -74,6 +74,31 @@ namespace Api.Controllers
 
         #endregion
 
+        #region UpdatePassword
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> updatePassword(int id,LogInModel model)
+        {
+            var _user = await _context.Users.Include(x => x.PasswordHash).FirstOrDefaultAsync(x => x.Id == id);
+            if (_user == null)
+            {
+                return  NotFound();
+            }
+
+          
+            _user.PasswordHash.Password = model.password;
+
+            _context.Entry(_user).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
+
+        }
+
+        #endregion
+
     }
 
 }

@@ -9,6 +9,7 @@ using Api.Data;
 using E_Commerce_Api.Data.Entities;
 using E_Commerce_Api.Models.ProductModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Api.Models.ProductModel;
 
 namespace Api.Controllers
 {
@@ -91,32 +92,37 @@ namespace Api.Controllers
         // PUT: api/Product/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProductEntity(int id, ProductEntity productEntity)
+        public async Task<IActionResult> PutProductEntity(int id, EditProduct model)
         {
-            if (id != productEntity.Id)
-            {
-                return BadRequest();
-            }
+          var  _product = await _context.Products.FirstOrDefaultAsync(x=>x.Id == id);
 
-            _context.Entry(productEntity).State = EntityState.Modified;
+            if (_product != null)
+            {
+                _product.Price = model.Price;
+                _product.InStock = model.InStock;
+                _context.Entry(_product).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductEntityExists(id))
+                try
                 {
-                    return NotFound();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!ProductEntityExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
-            }
 
-            return NoContent();
+                return NoContent();
+
+            }
+            else return NotFound();
+           
         }
 
         // POST: api/Product
